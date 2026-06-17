@@ -1,0 +1,18 @@
+# Installed fresh inside the image
+node_modules
+# Rebuilt at runtime by Bun.serve
+dist
+# VCS, local env/secrets, and editor/agent config
+.git
+.env
+.env.*
+.claude
+.cursor
+.idea
+.DS_Store
+# Logs and coverage
+*.log
+coverage
+*.lcov
+# Docs aren't needed at runtime
+docs

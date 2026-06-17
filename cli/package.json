@@ -1,0 +1,41 @@
+{
+  "name": "@jsonl-tools/cli",
+  "version": "0.2.0",
+  "description": "Push JSONL files into your jsonl-tools account from a server box — encrypted client-side, readable in the web app.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/vire/jsonl-tools/tree/main/cli",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vire/jsonl-tools.git",
+    "directory": "cli"
+  },
+  "bugs": {
+    "url": "https://github.com/vire/jsonl-tools/issues"
+  },
+  "keywords": [
+    "jsonl",
+    "cli",
+    "zero-knowledge",
+    "encryption",
+    "claude-code",
+    "share"
+  ],
+  "bin": {
+    "jsonl-tools": "dist/jsonl-tools.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "bun build ./index.ts --target=node --outfile dist/jsonl-tools.js --minify",
+    "test": "bun test",
+    "prepublishOnly": "bun run build"
+  }
+}

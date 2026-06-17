@@ -1,0 +1,24 @@
+# The jsonl-tools app. Postgres is external — provide it via DATABASE_URL
+# (a managed Postgres in production; bring your own for local dev).
+#
+#   docker compose up --build        # app on :3987 — requires DATABASE_URL
+#   docker compose down              # stop
+#
+# Set DATABASE_URL (and IP_HASH_SALT) via the shell or a .env file in this
+# directory. For a local Postgres to point at, see "How to develop locally" in
+# the README. In production set a real IP_HASH_SALT.
+
+services:
+  jsonl-tools-app:
+    build: .
+    container_name: jsonl-tools-app
+    environment:
+      NODE_ENV: production
+      PORT: "3987"
+      # Required — no embedded fallback. Compose fails fast if it is unset.
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL to your Postgres connection string}
+      IP_HASH_SALT: ${IP_HASH_SALT:-change-me-in-prod}
+    # Apply migrations, then start the server.
+    command: ["sh", "-c", "bun run migrate && bun run start"]
+    ports:
+      - "${APP_PORT:-3987}:3987"

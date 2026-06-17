@@ -1,0 +1,1242 @@
+* {
+  box-sizing: border-box;
+}
+:root {
+  /* Theme colors. Two-accent system: cyan drives interaction (buttons, focus,
+     active tabs); violet (--color-brand) is the brand + links + JSON strings. */
+  --color-primary: #0d1421; /* page background (deep navy) */
+  --color-secondary: #e8edf6; /* primary text (ink) */
+  --color-accent: #1ba6c9; /* cyan — interactive accent */
+  --color-brand: #9b86f5; /* violet — brand, links, JSON string values */
+  --color-neutral: #8b95ad; /* cool slate — secondary highlight */
+  --color-muted: #6b7892; /* muted text */
+  --color-faint: #566076; /* faintest — separators */
+  --color-border: rgba(110, 135, 170, 0.28); /* soft panel borders */
+
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color-scheme: dark;
+  color: var(--color-secondary);
+  background-color: var(--color-primary);
+}
+body {
+  margin: 0 auto;
+  /*padding: 20px;*/
+  /*padding-bottom: 60px;*/
+  max-width: 70vw;
+  /*min-height: 100vh;*/
+}
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 8px;
+  color: var(--color-muted);
+  background-color: var(--color-primary);
+}
+footer a {
+  color: inherit;
+  text-decoration: none;
+}
+footer a:visited {
+  color: inherit;
+}
+.app {
+  position: relative;
+  z-index: 1;
+}
+textarea {
+  width: 100%;
+  height: 300px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  background: color-mix(in srgb, var(--color-primary) 80%, black);
+  color: var(--color-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  resize: vertical;
+}
+button {
+  margin-top: 10px;
+  padding: 12px 24px;
+  font-family: inherit;
+  font-size: 16px;
+  background: var(--color-accent);
+  color: var(--color-primary);
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button:hover {
+  background: color-mix(in srgb, var(--color-accent) 80%, black);
+}
+button:disabled {
+  background: var(--color-muted);
+  cursor: not-allowed;
+}
+/* Share card: groups the optional title, the Share button, and the resulting
+   encrypted link into one element. */
+.share-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-primary) 90%, black);
+}
+.share-card > button {
+  margin-top: 0;
+}
+/* The link result is rendered inside the card, so drop its own box styling. */
+.share-card .share-result {
+  align-self: stretch;
+  margin-top: 0;
+  padding: 0;
+  border: none;
+  background: none;
+}
+/* Optional title for a logged-in share, saved alongside it in My History. */
+.share-title {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  background: color-mix(in srgb, var(--color-primary) 80%, black);
+  color: var(--color-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+.share-title::placeholder {
+  color: var(--color-muted);
+}
+/* Share toggle: a switch that publishes (right/on) or revokes (left/off) the
+   encrypted share. Resets the global button styling — it's a control, not a CTA. */
+.share-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.share-toggle {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  line-height: 0;
+  cursor: pointer;
+}
+.share-toggle:hover {
+  background: none;
+}
+.share-toggle:disabled {
+  background: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.share-toggle-track {
+  box-sizing: border-box;
+  display: inline-block;
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-primary) 60%, black);
+  border: 1px solid var(--color-border);
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+.share-toggle.on .share-toggle-track {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.share-toggle-knob {
+  box-sizing: border-box;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-secondary);
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+.share-toggle.on .share-toggle-knob {
+  transform: translateX(20px);
+  background: var(--color-primary);
+}
+.share-toggle.busy .share-toggle-knob {
+  animation: share-toggle-pulse 0.9s ease-in-out infinite;
+}
+@keyframes share-toggle-pulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+.share-toggle-label {
+  font-size: 14px;
+  color: var(--color-secondary);
+}
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.button-group-right {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.button-ghost {
+  margin-top: 10px;
+  padding: 12px 24px;
+  font-family: inherit;
+  font-size: 16px;
+  background: transparent;
+  color: var(--color-muted);
+  font-weight: 600;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.button-ghost:hover {
+  color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+.button-ghost input {
+  display: none;
+}
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+  color: var(--color-muted);
+}
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid var(--color-border);
+}
+.divider span {
+  padding: 0 16px;
+}
+.upload-button {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 12px 24px;
+  font-size: 16px;
+  background: transparent;
+  color: var(--color-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+.upload-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-neutral);
+  border-color: var(--color-neutral);
+}
+.upload-button input {
+  display: none;
+}
+#result {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: color-mix(in srgb, var(--color-primary) 80%, black);
+  border: 1px solid var(--color-border);
+}
+th,
+td {
+  padding: 10px 16px;
+  text-align: left;
+  border: 1px solid var(--color-border);
+}
+th {
+  background: var(--color-primary);
+  font-weight: 600;
+}
+td:nth-child(2) {
+  font-weight: 600;
+}
+.delta-orange {
+  color: var(--color-neutral);
+}
+.delta-red {
+  color: #ff6b6b;
+}
+/* Viewer table styles */
+.viewer-table {
+  table-layout: fixed;
+  width: 100%;
+}
+.viewer-table .line-number {
+  width: 50px;
+  text-align: center;
+  color: var(--color-muted);
+  vertical-align: top;
+}
+.viewer-table .json-content {
+  text-align: left;
+  overflow: hidden;
+}
+.viewer-table .json-content > div {
+  overflow-x: auto;
+  word-break: break-all;
+}
+.viewer-table pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 13px;
+}
+
+.error {
+  color: #ff6b6b;
+  padding: 12px;
+  background: color-mix(in srgb, var(--color-primary) 70%, #ff6b6b 30%);
+  border-radius: 4px;
+}
+.validation-error {
+  margin-top: 16px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--color-primary) 70%, #ff6b6b 20%);
+  border: 1px solid #ff6b6b;
+  border-radius: 4px;
+  color: #ff6b6b;
+}
+.validation-error pre {
+  margin: 8px 0 0 0;
+  white-space: pre-wrap;
+  font-size: 13px;
+  color: var(--color-secondary);
+}
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 0.3s;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em var(--color-muted));
+}
+.bun-logo {
+  transform: scale(1.2);
+}
+.bun-logo:hover {
+  filter: drop-shadow(0 0 2em var(--color-neutral));
+}
+.react-logo {
+  animation: spin 20s linear infinite;
+}
+.react-logo:hover {
+  filter: drop-shadow(0 0 2em var(--color-accent));
+}
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+h1 {
+  font-size: 2.1em;
+  line-height: 1.1;
+}
+h1 a {
+  color: inherit;
+  text-decoration: none;
+}
+h1 a:visited {
+  color: inherit;
+}
+/* Header brand lockup: { ⚙ } jsonl-tools. Inline (not the adaptive logo.svg) so
+   it always reads correctly on the forced-dark background and tracks the theme
+   tokens. The braces, gear, and "-tools" are brand violet; "jsonl" is ink. */
+.site-title {
+  margin: 12px 0;
+  line-height: 1;
+}
+.site-title a {
+  display: inline-flex;
+}
+.site-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 40px;
+  line-height: 1;
+}
+.site-logo__mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-brand);
+}
+.site-logo__brace {
+  font-weight: 400;
+}
+.site-logo__gear {
+  width: 0.72em;
+  height: 0.72em;
+  display: block;
+}
+.site-logo__word {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--color-secondary);
+}
+.site-logo__tools {
+  color: var(--color-brand);
+}
+code {
+  background-color: color-mix(in srgb, var(--color-primary) 80%, black);
+  padding: 0.2em 0.4em;
+  border-radius: 0.3em;
+  font-family: monospace;
+}
+.api-tester {
+  margin: 2rem auto 0;
+  width: 100%;
+  max-width: 600px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.endpoint-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: color-mix(in srgb, var(--color-primary) 80%, black);
+  padding: 0.75rem;
+  border-radius: 12px;
+  font: monospace;
+  border: 2px solid var(--color-neutral);
+  transition: 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.endpoint-row:focus-within {
+  border-color: var(--color-accent);
+}
+.method {
+  background: var(--color-neutral);
+  color: var(--color-primary);
+  padding: 0.3rem 0.7rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9em;
+  appearance: none;
+  margin: 0;
+  width: min-content;
+  display: block;
+  flex-shrink: 0;
+  border: none;
+}
+.method option {
+  text-align: left;
+}
+.url-input {
+  width: 100%;
+  flex: 1;
+  background: 0;
+  border: 0;
+  color: var(--color-neutral);
+  font: 1em monospace;
+  padding: 0.2rem;
+  outline: 0;
+}
+.url-input:focus {
+  color: var(--color-secondary);
+}
+.url-input::placeholder {
+  color: color-mix(in srgb, var(--color-neutral) 40%, transparent);
+}
+.send-button {
+  background: var(--color-accent);
+  color: white;
+  border: 0;
+  padding: 0.4rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  transition: 0.1s;
+  cursor: var(--bun-cursor);
+}
+.send-button:hover {
+  background: color-mix(in srgb, var(--color-accent) 80%, black);
+  transform: translateY(-1px);
+  cursor: pointer;
+}
+.response-area {
+  width: 100%;
+  min-height: 120px;
+  background: color-mix(in srgb, var(--color-primary) 80%, black);
+  border: 2px solid var(--color-neutral);
+  border-radius: 12px;
+  padding: 0.75rem;
+  color: var(--color-secondary);
+  font: monospace;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.response-area:focus {
+  border-color: var(--color-accent);
+}
+.response-area::placeholder {
+  color: color-mix(in srgb, var(--color-neutral) 40%, transparent);
+}
+@media (prefers-reduced-motion) {
+  *,
+  ::before,
+  ::after {
+    animation: none !important;
+  }
+}
+
+/* Info links */
+.info-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.what-is-jsonl-link,
+.load-example-link {
+  color: var(--color-muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+.what-is-jsonl-link:hover,
+.load-example-link:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+.link-separator {
+  color: var(--color-faint);
+  font-size: 14px;
+}
+
+/* Viewer (recipient) header: brand lockup on the left, a quiet link back to the
+   app on the right, with a one-line tagline beneath. Reuses the muted-link
+   visual language from .info-links. */
+.viewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.viewer-back-link {
+  color: var(--color-muted);
+  text-decoration: none;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.viewer-back-link:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+.viewer-tagline {
+  margin: 0 0 20px;
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+/* Username dropdown in the top menu — reuses the muted-link visual language. */
+.user-menu {
+  position: relative;
+  display: inline-flex;
+}
+.user-menu-trigger {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-accent);
+}
+.user-menu-trigger:hover {
+  color: var(--color-secondary);
+}
+.user-menu-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 10;
+  min-width: 140px;
+  padding: 4px;
+  background: var(--color-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+.user-menu-item {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+.user-menu-item:hover {
+  color: var(--color-secondary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: var(--color-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 40px;
+  max-width: 700px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: var(--color-muted);
+  font-size: 28px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  width: auto;
+}
+.modal-close:hover {
+  color: var(--color-secondary);
+  background: transparent;
+}
+.modal-content h2 {
+  margin-top: 0;
+  color: var(--color-secondary);
+}
+.modal-content h3 {
+  margin-top: 24px;
+  color: var(--color-accent);
+}
+.modal-content p,
+.modal-content li {
+  color: var(--color-secondary);
+  line-height: 1.7;
+}
+.modal-content ul {
+  padding-left: 20px;
+}
+.modal-content li {
+  margin-bottom: 8px;
+}
+.modal-content pre {
+  background: color-mix(in srgb, var(--color-primary) 70%, black);
+  padding: 16px;
+  border-radius: 4px;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+}
+
+.share-result {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-primary) 85%, black);
+}
+.share-result p {
+  margin: 0 0 12px;
+  color: var(--color-secondary);
+  line-height: 1.6;
+}
+.share-link-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.share-link-row input {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-primary) 70%, black);
+  color: var(--color-accent);
+  font-family: monospace;
+}
+/* Drop the global button top-margin so the input stretches to the button's
+   height instead of overshooting it (same fix as .account-panel .input-row). */
+.share-link-row button {
+  margin-top: 0;
+}
+
+.account-panel {
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-primary) 90%, black);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.account-panel input {
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-primary) 70%, black);
+  color: var(--color-accent);
+  margin-right: 6px;
+}
+/* Unlock row: input + buttons on one line, even gaps, equal height (the input
+   stretches to match the buttons). */
+.account-panel .input-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.account-panel .input-row input {
+  flex: 1;
+  margin-right: 0;
+}
+.account-panel .input-row button {
+  margin-top: 0;
+}
+/* Copyable secret — shared by the generated passphrase and the recovery code:
+   [ value ] (actions…) (copy), the trailing controls as ghost icon buttons
+   (design 2026-06-04). */
+.secret-row {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+.secret-box {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-primary) 70%, black);
+  color: var(--color-accent);
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  word-break: break-word;
+  user-select: all;
+}
+/* Trailing icon buttons (copy, regenerate) — match the box height via the
+   row's stretch, transparent until hovered so they read as secondary. */
+.icon-button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-accent);
+  cursor: pointer;
+}
+.icon-button:hover {
+  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+.saved-confirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--color-secondary);
+  cursor: pointer;
+}
+.account-panel .saved-confirm input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+/* Recover phase: a vertical flow — recovery code, then (once the code is
+   verified) the same generated-passphrase control as setup, then Recover. */
+.account-panel .recover-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+.account-panel .recover-flow > p {
+  margin: 0;
+}
+.account-panel .recover-flow > button {
+  margin-top: 2px;
+  align-self: flex-start;
+}
+.recover-step {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+/* Match the generated-passphrase box's height: same padding + font-size + border
+   so the two stacked rows line up. */
+.account-panel .recovery-code-input {
+  width: 100%;
+  margin-right: 0;
+  padding: 10px 12px;
+  font-size: 16px;
+}
+.account-panel .recovery-code-input[aria-invalid="true"] {
+  border-color: #ff6b6b;
+}
+.recover-status {
+  font-size: 13px;
+  color: var(--color-secondary);
+}
+.recover-status.ok {
+  color: var(--color-accent);
+}
+.recover-status.error {
+  color: #ff6b6b;
+}
+/* The disabled new-passphrase placeholder shown before the code is verified —
+   echoes the real secret row, dimmed and inert. */
+.secret-row.is-disabled {
+  opacity: 0.55;
+}
+.secret-box.placeholder {
+  color: var(--color-secondary);
+  font-size: 14px;
+  letter-spacing: normal;
+  user-select: none;
+}
+.secret-row.is-disabled .icon-button {
+  cursor: not-allowed;
+}
+.secret-row.is-disabled .icon-button:hover {
+  background: transparent;
+}
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.history-list {
+  list-style: none;
+  padding-left: 0;
+}
+.history-list li {
+  padding: 6px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-muted) 40%, transparent);
+}
+.history-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.history-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+/* Title line: the brand link trailed by the quiet chain-icon share button. */
+.history-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.history-title-row a {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Saved-session titles read as brand links (the violet "My Cool thing" lockup). */
+.history-entry a,
+.history-entry a:visited {
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+/* Per-row share control: a quiet chain glyph that brightens muted → accent on
+   hover, then flips to a green check for 2s once the link is on the clipboard. */
+.history-share {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 2px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+.history-share:hover {
+  background: transparent;
+  color: var(--color-accent);
+}
+.history-share.copied {
+  color: #98c379;
+}
+.history-meta {
+  font-size: 12px;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+/* Per-row remove control: a quiet × that brightens on hover, then swaps for an
+   inline "Remove from history? Confirm / Cancel" affordance. */
+.history-remove {
+  flex: none;
+  margin: 0;
+  padding: 0 6px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+.history-remove:hover:not(:disabled) {
+  background: transparent;
+  color: #ff6b6b;
+}
+.history-remove:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.history-confirm {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-muted);
+}
+.history-confirm-btn {
+  margin: 0;
+  padding: 2px 8px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-secondary);
+  cursor: pointer;
+}
+.history-confirm-btn:hover:not(:disabled) {
+  background: transparent;
+  border-color: var(--color-secondary);
+}
+.history-confirm-btn.danger {
+  color: #ff6b6b;
+  border-color: color-mix(in srgb, #ff6b6b 60%, transparent);
+}
+.history-confirm-btn.danger:hover:not(:disabled) {
+  border-color: #ff6b6b;
+}
+.history-confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+/* Ready-phase tabs: History | Share. */
+.panel-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-muted) 40%, transparent);
+}
+.panel-tab {
+  margin: 0;
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+.panel-tab:hover:not(.active) {
+  color: var(--color-secondary);
+}
+.panel-tab.active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+.tab-hint {
+  color: var(--color-muted);
+}
+/* The share card is seamless inside the panel's Share tab (the panel is the box). */
+.account-panel .share-card {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+/* CLI tab: a copyable command callout, a collapsible "+ Add" mint form, and a
+   spaced token list (label + meta left, Revoke pinned right). */
+.cli-tokens {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.cli-tokens .tab-hint,
+.cli-tokens .cli-tokens-empty {
+  margin: 0;
+}
+/* Terminal-style command block (reuses .secret-row): a muted `$` prompt and the
+   command in the accent color, monospace, with the shared copy button. */
+.secret-row-command .secret-box {
+  letter-spacing: 0;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.cli-prompt {
+  margin-right: 10px;
+  color: var(--color-muted);
+  font-weight: 600;
+  user-select: none;
+}
+/* Header row: section title on the left, the "+ Add" affordance on the right. */
+.cli-tokens-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cli-tokens-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-secondary);
+}
+.cli-add-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  background: transparent;
+  color: var(--color-accent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 55%, transparent);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.cli-add-button:hover {
+  background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+  border-color: var(--color-accent);
+}
+.cli-add-button svg {
+  display: block;
+}
+.cli-token-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cli-token-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--color-muted) 45%, transparent);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-primary) 80%, black);
+}
+.cli-token-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.cli-token-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-secondary);
+  word-break: break-word;
+}
+.cli-token-meta {
+  font-size: 13px;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+.cli-token-tag {
+  flex: none;
+  padding: 1px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #ff6b6b;
+  border: 1px solid color-mix(in srgb, #ff6b6b 50%, transparent);
+  border-radius: 999px;
+}
+.cli-revoke-button {
+  flex: none;
+  margin: 0;
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  background: transparent;
+  color: var(--color-muted);
+  border: 1px solid color-mix(in srgb, var(--color-muted) 60%, transparent);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.cli-revoke-button:hover {
+  color: #ff6b6b;
+  border-color: color-mix(in srgb, #ff6b6b 70%, transparent);
+  background: color-mix(in srgb, #ff6b6b 12%, transparent);
+}
+
+/* History row layout (Merge Share → History, 2026-06-06) */
+.history-pane-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+.history-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+.history-rename-input {
+  width: 100%;
+  font: inherit;
+  color: var(--color-secondary);
+  background: color-mix(in srgb, var(--color-primary) 80%, black);
+  border: 1px solid var(--color-accent);
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+
+/* ⋮ row menu */
+.row-menu-wrap {
+  position: relative;
+}
+.row-menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--color-muted);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.row-menu-trigger:hover {
+  color: var(--color-secondary);
+  border-color: var(--color-neutral);
+}
+.row-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  min-width: 170px;
+  padding: 5px 0;
+  background: color-mix(in srgb, var(--color-primary) 70%, #1b2a44);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+.row-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: var(--color-secondary);
+  background: transparent;
+  border: none;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+.row-menu-item:hover:not(:disabled) {
+  background: rgba(110, 135, 170, 0.14);
+}
+.row-menu-item:disabled {
+  color: var(--color-faint);
+  cursor: not-allowed;
+}
+.row-menu-item.danger {
+  color: #e06a6a;
+}
+.row-menu-sep {
+  height: 1px;
+  margin: 5px 0;
+  background: var(--color-border);
+}

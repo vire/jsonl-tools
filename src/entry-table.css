@@ -1,0 +1,168 @@
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.summary {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.snapshot-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.snapshot-status {
+  font-size: 12px;
+  color: var(--color-accent);
+}
+
+.btn-snapshot {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--color-muted);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--color-muted) 40%, transparent);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-snapshot:hover {
+  color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
+/* Copy As / Download As dropdown menus. The trigger reuses .btn-snapshot; the
+   popover anchors to the trigger's right edge so it stays inside the toolbar. */
+.menu {
+  position: relative;
+  display: inline-block;
+}
+.menu-caret {
+  font-size: 10px;
+  opacity: 0.8;
+}
+.menu-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-width: 110px;
+  padding: 4px;
+  border: 1px solid color-mix(in srgb, var(--color-muted) 50%, transparent);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-primary) 92%, black);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+.menu-item {
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: inherit;
+  text-align: left;
+  color: var(--color-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.menu-item:hover {
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  color: var(--color-secondary);
+}
+
+.summary span strong {
+  color: var(--color-secondary);
+}
+
+/* Fixed layout so the meta columns keep their widths and the description column
+   absorbs whatever space is left — letting long lines trim to fit (see
+   .desc-text) instead of widening the table into a horizontal scroll. */
+.entry-table {
+  table-layout: fixed;
+}
+
+.col-ts {
+  width: 240px;
+  color: var(--color-muted);
+}
+.col-delta {
+  width: 110px;
+  font-weight: 600;
+}
+.col-type {
+  width: 160px;
+}
+
+.delta-fast {
+  color: var(--color-muted);
+}
+.delta-medium {
+  color: var(--color-neutral);
+}
+.delta-slow {
+  color: #ff6b6b;
+}
+
+.type-user {
+  color: var(--color-accent);
+}
+.type-assistant {
+  color: #7ee787;
+}
+.type-queue {
+  color: var(--color-muted);
+}
+.type-other {
+  color: var(--color-neutral);
+}
+
+/* Fills the (fixed-layout) description column and trims overflow to an ellipsis.
+   No fixed max-width — the column width does the constraining, so the line
+   trims dynamically to whatever room the viewport leaves. */
+.desc-text {
+  min-height: 1.4em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+/* Multi-block descriptions (e.g. an assistant turn with text + tool_use) render
+   one <div> per block; each is its own line and must trim independently — the
+   parent's ellipsis only applies to its own single inline run. */
+.desc-text > div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desc-text:hover {
+  color: var(--color-accent);
+}
+
+.desc-json {
+  margin-top: 8px;
+  padding: 8px;
+  border-left: 2px solid color-mix(in srgb, var(--color-muted) 30%, transparent);
+  max-height: 400px;
+  overflow: auto;
+}
+
+.tool-name {
+  color: var(--color-neutral);
+}
+.tool-id {
+  color: color-mix(in srgb, var(--color-muted) 60%, transparent);
+  font-size: 11px;
+}

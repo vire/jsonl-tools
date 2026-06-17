@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="372" height="64" viewBox="0 0 372 64" role="img" aria-label="jsonl-tools">
+  <style>
+    .cog { fill: #9b86f5; }
+    .brand { fill: #9b86f5; }
+    .neutral { fill: #0d1421; }
+    .brace {
+      fill: none;
+      stroke: #0d1421;
+      stroke-width: 5.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    @media (prefers-color-scheme: dark) {
+      .neutral { fill: #e8edf6; }
+      .brace { stroke: #e8edf6; }
+    }
+  </style>
+  <path class="brace" d="M26 10 C17.75 10 18.5 10 18.5 17.04 L18.5 28.48 C18.5 31.12 14 32 11 32 C14 32 18.5 32.88 18.5 35.52 L18.5 46.96 C18.5 54 17.75 54 26 54"/>
+  <path class="cog" fill-rule="evenodd" d="M60.4 15.17 Q61.24 9.23 63.72 9.72 L69.71 12.2 Q71.81 13.61 68.21 18.41L71.59 21.79 Q76.39 18.19 77.8 20.29 L80.28 26.28 Q80.77 28.76 74.83 29.6L74.83 34.4 Q80.77 35.24 80.28 37.72 L77.8 43.71 Q76.39 45.81 71.59 42.21L68.21 45.59 Q71.81 50.39 69.71 51.8 L63.72 54.28 Q61.24 54.77 60.4 48.83L55.6 48.83 Q54.76 54.77 52.28 54.28 L46.29 51.8 Q44.19 50.39 47.79 45.59L44.41 42.21 Q39.61 45.81 38.2 43.71 L35.72 37.72 Q35.23 35.24 41.17 34.4L41.17 29.6 Q35.23 28.76 35.72 26.28 L38.2 20.29 Q39.61 18.19 44.41 21.79L47.79 18.41 Q44.19 13.61 46.29 12.2 L52.28 9.72 Q54.76 9.23 55.6 15.17 Z M50 32 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 Z"/>
+  <path class="brace" d="M90 10 C98.25 10 97.5 10 97.5 17.04 L97.5 28.48 C97.5 31.12 102 32 105 32 C102 32 97.5 32.88 97.5 35.52 L97.5 46.96 C97.5 54 98.25 54 90 54"/>
+  <text x="120" y="43" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="34" font-weight="700" letter-spacing="-0.5">
+    <tspan class="neutral">jsonl</tspan><tspan class="brand">-tools</tspan>
+  </text>
+</svg>

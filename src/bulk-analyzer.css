@@ -1,0 +1,169 @@
+:root {
+  --color-primary: #0d1421;
+  --color-secondary: #e8edf6;
+  --color-accent: #1ba6c9;
+  --color-brand: #9b86f5;
+  --color-neutral: #8b95ad;
+  --color-muted: #6b7892;
+  --color-faint: #566076;
+  --color-border: rgba(110, 135, 170, 0.28);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color-scheme: dark;
+  background: var(--color-primary);
+  color: var(--color-secondary);
+  min-height: 100vh;
+}
+
+h4 {
+  padding: 16px 24px 0;
+}
+h4 a[href],
+h4 a:link,
+h4 a:visited {
+  color: var(--color-secondary) !important;
+  text-decoration: none !important;
+}
+
+.drop-zone {
+  border: 2px dashed var(--color-muted);
+  border-radius: 8px;
+  padding: 48px;
+  text-align: center;
+  margin: 24px;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+}
+
+.drop-zone.drag-over {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+}
+
+.drop-zone p {
+  color: var(--color-muted);
+  font-size: 14px;
+}
+.drop-zone p strong {
+  color: var(--color-secondary);
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 24px;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-muted) 30%, transparent);
+}
+
+.tab {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-family: inherit;
+  background: color-mix(in srgb, var(--color-primary) 80%, black);
+  color: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.tab:hover {
+  color: var(--color-secondary);
+  background: color-mix(in srgb, var(--color-primary) 70%, black);
+}
+
+.tab.active {
+  color: white;
+  background: color-mix(in srgb, var(--color-accent) 20%, var(--color-primary));
+  border-color: var(--color-accent);
+}
+
+.tab .close {
+  margin-left: 8px;
+  opacity: 0.4;
+  font-size: 11px;
+}
+
+.tab .close:hover {
+  opacity: 1;
+}
+
+.tab-content {
+  display: none;
+  padding: 24px;
+}
+.tab-content.active {
+  display: block;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: color-mix(in srgb, var(--color-primary) 80%, black);
+  border: 1px solid var(--color-border);
+}
+
+th {
+  text-align: left;
+  padding: 10px 16px;
+  background: var(--color-primary);
+  color: var(--color-secondary);
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+td {
+  padding: 10px 16px;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-muted) 30%, transparent);
+  vertical-align: top;
+}
+
+tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 120px 24px;
+  color: var(--color-muted);
+  font-size: 15px;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 8px;
+  color: var(--color-muted);
+  background-color: var(--color-primary);
+}
+footer a {
+  color: inherit;
+  text-decoration: none;
+}
+footer a:visited {
+  color: inherit;
+}
